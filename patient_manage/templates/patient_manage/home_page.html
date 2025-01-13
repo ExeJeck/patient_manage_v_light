@@ -1,0 +1,17 @@
+{% extends "patient_manage/base.html" %}
+
+{% block title %}Patient Management{% endblock %}
+
+{% block content %}
+{% if appointments %}
+    {% for appointment in appointments %}
+    <div class="appointment_container">
+        <h2>{{ appointment.reception_time }}</h2>
+        <p>Patient: {{ appointment.patient.first_name }}</p>
+        <p>Doctor: {{ appointment.doctor.first_name }}</p>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No appointments found</p>
+{% endif %}
+{% endblock content %}
