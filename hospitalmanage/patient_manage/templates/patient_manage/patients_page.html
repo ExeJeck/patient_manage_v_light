@@ -1,0 +1,44 @@
+{% extends "patient_manage/base.html" %}
+{% load custom_tags %}
+
+{% block title %}Patients{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <a class="button button__create-patient" href="{% url 'patient_manage:patient_create' %}">Add New Patient</a>
+    </div>
+    {% if patients %}
+    {% for patient in patients %}
+        <div class="patient_container">
+            <h2>{{ patient.first_name }} {{ patient.last_name }}</h2>
+            <p>Date of birth: {{ patient.date_of_birth}}</p>
+            <p>email: {{ patient.email }}</p>
+            <p>phone number: {{ patient.phone_number }}</p>
+            <h3>Diagnoses:</h3>
+            {% if diagnosis in patient.diagnoses.all %}
+            <p>
+            {% for diagnosis in patient.diagnoses.all %}
+                {{ diagnosis.name }}
+            {% endfor %}
+            </p>
+            {% else %}
+                <p>The patient has no diagnoses</p>
+            {% endif %}
+            <div class="button-container">
+                <form action="{% url 'patient_manage:patient_update' patient.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" name="Update" value="Update" class="button button__update button__update-patient">
+                </form>
+                <form action="{% url 'patient_manage:record_delete' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="pk" value="{{ patient.pk }}">
+                    <input type="hidden" name="model" value="{{ patient|model_name }}">
+                    <input type="submit" name="Delete" value="Delete" class="button button__delete button__delete-patient">
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+    {% else %}
+        <p>No patients found</p>
+    {% endif %}
+{% endblock content %}
